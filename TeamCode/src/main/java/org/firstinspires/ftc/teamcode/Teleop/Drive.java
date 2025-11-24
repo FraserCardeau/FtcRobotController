@@ -57,13 +57,6 @@ public class Drive extends LinearOpMode {
         ShooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         ballKick = hardwareMap.get(Servo.class,("ballKick"));
         hood = hardwareMap.get(Servo.class,("hood"));
-        double power_x=0.75;
-        double power_y;
-        double y;
-        double F = 11.7;
-        double P = 0.5;
-        double I = 0.5;
-        double D = 0.5;
         b = new PIDFController(new PIDFCoefficients(bp, 0, bd, bf));
         s = new PIDFController(new PIDFCoefficients(sp, 0, sd, sf));
         waitForStart();

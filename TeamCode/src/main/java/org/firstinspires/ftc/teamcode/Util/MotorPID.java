@@ -6,20 +6,19 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 public class MotorPID {
     DcMotorEx motor;
-    PIDFController b, s;
     PIDFCoefficients bConstants, sConstants;
     public double targetVel, pSwitch, currentVel;
-    public MotorPID(DcMotorEx motor, PIDFCoefficients b, PIDFCoefficients s, double pSwitch) {
+    PIDFController b, s;
+    public MotorPID(DcMotorEx motor, PIDFCoefficients bConstants, PIDFCoefficients sConstants, double pSwitch) {
         this.motor = motor;
-        this.bConstants = b;
-        this.sConstants = s;
+        this.bConstants = bConstants;
+        this.sConstants = sConstants;
         this.pSwitch = pSwitch;
+        this.b = new PIDFController(bConstants);
+        this.s = new PIDFController(sConstants);
     }
     public void update(){
         currentVel = motor.getVelocity();
-        b.setCoefficients(bConstants);
-        s.setCoefficients(sConstants);
-
         if (Math.abs(targetVel - currentVel) < pSwitch) {
             s.updateError(targetVel - currentVel);
             motor.setPower(s.run());

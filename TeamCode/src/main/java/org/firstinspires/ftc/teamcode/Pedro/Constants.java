@@ -61,5 +61,4 @@ public class Constants {
             .forwardTicksToInches(0.0022)
             .strafeTicksToInches(.0022)
             .turnTicksToInches(0.0033);
-
 }
