@@ -51,7 +51,7 @@ public class NextTeleop extends NextFTCOpMode {
         Gamepads.gamepad1().rightBumper().toggleOnBecomesTrue()
                 .whenBecomesTrue(ShooterSystem.INSTANCE.prime)
                 .whenBecomesFalse(ShooterSystem.INSTANCE.stopPrime);
-        Gamepads.gamepad2().dpadUp().whenBecomesTrue(() -> {
+        Gamepads.gamepad1().dpadUp().whenBecomesTrue(() -> {
             if (shooterQueue.size() < 3) {
                 shooterQueue.add(ShooterSystem.INSTANCE.shoot);
             }
