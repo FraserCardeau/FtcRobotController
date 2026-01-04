@@ -1,7 +1,8 @@
 repositories {
     mavenCentral()
     google() // Needed for androidx
-    maven { url = "https://mymaven.bylazar.com/releases" }
+    maven {url "https://repo.dairy.foundation/releases"}
+    maven {url = "https://mymaven.bylazar.com/releases"}
 }
 
 dependencies {
@@ -15,16 +16,12 @@ dependencies {
     implementation 'org.firstinspires.ftc:Vision:11.0.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
 
-    implementation 'com.pedropathing:ftc:2.0.3'
+    implementation "org.solverslib:core:0.3.3"
+    implementation "org.solverslib:pedroPathing:0.3.3"
+
+    implementation 'com.pedropathing:ftc:2.0.5'
     implementation 'com.pedropathing:telemetry:1.0.0'
 
     implementation 'com.bylazar:fullpanels:1.0.6'
-
-    implementation 'dev.nextftc:ftc:1.0.1'
-    implementation 'dev.nextftc:hardware:1.0.1'
-    implementation 'dev.nextftc:control:1.0.0'
-    implementation 'dev.nextftc:bindings:1.0.1'
-
-    implementation 'dev.nextftc.extensions:pedro:1.0.0'
 }
 
