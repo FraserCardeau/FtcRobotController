@@ -9,7 +9,6 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
 import org.firstinspires.ftc.teamcode.Pedro.VisionOdometryLocalizer;
-import org.firstinspires.ftc.teamcode.Util.Hardware;
 
 public class Drive extends SubsystemBase {
     Follower follower;

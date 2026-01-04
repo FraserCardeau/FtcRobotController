@@ -21,7 +21,7 @@ public class VisionOdometryLocalizer extends PinpointLocalizer {
     Pose3D bp;
     Turret turret;
     public VisionOdometryLocalizer(HardwareMap map, PinpointConstants constants,
-                                   Limelight3A limelight, Turret turret) {
+                                   Limelight3A limelight) {
         super(map, constants);
         this.turret = turret;
         this.limelight = limelight;
@@ -37,7 +37,7 @@ public class VisionOdometryLocalizer extends PinpointLocalizer {
             bp = result.getBotpose_MT2();
             double vx = bp.getPosition().x * M_TO_IN;
             double vy = bp.getPosition().y * M_TO_IN;
-            double vYawDeg = bp.getOrientation().getYaw() - turret.getCurrentPosition();
+            double vYawDeg = bp.getOrientation().getYaw() /*- turret.getCurrentPosition()*/;
             double vHeading = Math.toRadians(vYawDeg);
             this.setPose(new Pose(vx, vy, normalizeAngle(vHeading)));
         }
