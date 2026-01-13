@@ -16,31 +16,26 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.Subsystem.Turret;
 
 public class VisionOdometryLocalizer extends PinpointLocalizer {
-    private final Limelight3A limelight;
     private final double M_TO_IN = 39.37007874;
     Pose3D bp;
     Turret turret;
-    public VisionOdometryLocalizer(HardwareMap map, PinpointConstants constants,
-                                   Limelight3A limelight) {
+    public VisionOdometryLocalizer(HardwareMap map, PinpointConstants constants) {
         super(map, constants);
         this.turret = turret;
-        this.limelight = limelight;
-        this.limelight.setPollRateHz(60);
-        this.limelight.start();
     }
 
     @Override
     public void update() {
         super.update();
-        LLResult result = limelight.getLatestResult();
+        /*LLResult result = limelight.getLatestResult();
         if (result.isValid() && Math.abs(result.getBotpose_MT2().getOrientation().getYaw(AngleUnit.DEGREES) - bp.getOrientation().getYaw(AngleUnit.DEGREES)) < 20) {
             bp = result.getBotpose_MT2();
             double vx = bp.getPosition().x * M_TO_IN;
             double vy = bp.getPosition().y * M_TO_IN;
-            double vYawDeg = bp.getOrientation().getYaw() /*- turret.getCurrentPosition()*/;
+            double vYawDeg = bp.getOrientation().getYaw() - turret.getCurrentPosition()
             double vHeading = Math.toRadians(vYawDeg);
             this.setPose(new Pose(vx, vy, normalizeAngle(vHeading)));
-        }
+        }*/
     }
 
     private double normalizeAngle(double a) {

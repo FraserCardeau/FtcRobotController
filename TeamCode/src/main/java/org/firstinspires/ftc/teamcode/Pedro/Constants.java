@@ -39,7 +39,7 @@ public class Constants {
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
 
     public static Follower createFollower(HardwareMap hardwareMap) {
-        Localizer VisionOdometryLocalizer = new VisionOdometryLocalizer(hardwareMap, localizerConstants, hardwareMap.get(Limelight3A.class, "limelight3A"));
+        Localizer VisionOdometryLocalizer = new VisionOdometryLocalizer(hardwareMap, localizerConstants);
         return new FollowerBuilder(followerConstants, hardwareMap)
                 .pathConstraints(pathConstraints)
                 .mecanumDrivetrain(driveConstants)
