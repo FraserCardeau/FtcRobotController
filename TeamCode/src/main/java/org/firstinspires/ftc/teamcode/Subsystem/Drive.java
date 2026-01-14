@@ -32,5 +32,6 @@ public class Drive extends SubsystemBase {
     @Override
     public void periodic(){
         follower.setTeleOpDrive(-Math.pow(gamepadEx.getLeftX(), 1.5), -Math.pow(gamepadEx.getLeftY(), 1.5), -Math.pow(gamepadEx.getRightX(), 1.5), true);
+        follower.update();
     }
 }
