@@ -42,7 +42,9 @@ public class SolversLibTeleOp extends CommandOpMode {
         breakBeamSensor = new BreakBeamSensor(hardwareMap, "breakBeam");
 
         waitForStart();
-        CommandScheduler.getInstance().schedule(new RunShooter(shooter));
+        Command runShooter = new RunShooter(shooter);
+        Button b = controller.getGamepadButton(GamepadKeys.Button.B);
+        b.toggleWhenPressed(runShooter);
 
         Button rightBumper = controller.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER);
         rightBumper.whenPressed(new RepeatCommand(shootSequence, breakBeamSensor.artifactCount), false);
@@ -60,7 +62,6 @@ public class SolversLibTeleOp extends CommandOpMode {
     public void run(){
         super.run();
         telemetry.addData("shooter speed: ", shooter.shooter.getVelocity());
-        telemetry.addData("shoot command scheduled? ", shootSequence);
         telemetry.addData("x: ", drive.follower.getPose().getX());
         telemetry.addData("y: ", drive.follower.getPose().getY());
         telemetry.addData("heading: ", drive.follower.getPose().getHeading());

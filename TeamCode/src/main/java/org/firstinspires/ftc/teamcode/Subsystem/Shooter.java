@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Shooter extends SubsystemBase {
     public MotorEx shooter;
-    PIDFController shooterPID = new PIDFController(0.01, 0, 0.0001, 0.001);
+    PIDFController shooterPID = new PIDFController(0.001, 0, 0.000001, 0.01);
     public Shooter(final HardwareMap hwMap, final String name, Telemetry telemetry) {
         shooter = new MotorEx(hwMap, name);
     }
