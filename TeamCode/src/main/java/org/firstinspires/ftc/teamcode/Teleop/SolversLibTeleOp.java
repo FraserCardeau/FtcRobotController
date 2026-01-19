@@ -13,6 +13,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.teamcode.Commands.Align;
 import org.firstinspires.ftc.teamcode.Commands.Shoot.RunShooter;
 import org.firstinspires.ftc.teamcode.Commands.Shoot.ShootKicker;
+import org.firstinspires.ftc.teamcode.Subsystem.BreakBeamSensor;
 import org.firstinspires.ftc.teamcode.Subsystem.Intake;
 import org.firstinspires.ftc.teamcode.Subsystem.Kicker;
 import org.firstinspires.ftc.teamcode.Subsystem.Shooter;
@@ -22,26 +23,29 @@ import org.firstinspires.ftc.teamcode.Subsystem.Turret;
 @TeleOp
 public class SolversLibTeleOp extends CommandOpMode {
     Command driveCommand;
+    Turret turret;
     Drive drive;
     Kicker kicker;
     Intake intake;
     Shooter shooter;
+    BreakBeamSensor breakBeamSensor;
     Command shootSequence = new ShootKicker(kicker, intake);
     @Override
     public void initialize() {
         CommandScheduler.getInstance().enable();
         GamepadEx controller = new GamepadEx(gamepad1);
-        Turret turret = new Turret(hardwareMap, "turret");
+        turret = new Turret(hardwareMap, "turret");
         drive = new Drive(hardwareMap, controller, telemetry, turret);
         kicker = new Kicker(hardwareMap, "ballKick", telemetry);
         intake = new Intake(hardwareMap, "intake");
         shooter = new Shooter(hardwareMap, "shooter", telemetry);
+        breakBeamSensor = new BreakBeamSensor(hardwareMap, "breakBeam");
 
         waitForStart();
-        //CommandScheduler.getInstance().schedule(new RunShooter(shooter));
+        CommandScheduler.getInstance().schedule(new RunShooter(shooter));
 
         Button rightBumper = controller.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER);
-        rightBumper.whenPressed(shootSequence, false);
+        rightBumper.whenPressed(new RepeatCommand(shootSequence, breakBeamSensor.artifactCount), false);
 
         Button leftBumper = controller.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER);
         leftBumper.toggleWhenPressed((intake::enable), (intake::disable));
