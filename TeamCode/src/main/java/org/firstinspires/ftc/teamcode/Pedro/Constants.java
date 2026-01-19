@@ -12,10 +12,14 @@ import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Pedro.VisionOdometryLocalizer;
+import org.firstinspires.ftc.teamcode.Subsystem.Turret;
+
+import java.net.InetAddress;
 
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants().mass(10.5)
@@ -38,8 +42,8 @@ public class Constants {
 
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
 
-    public static Follower createFollower(HardwareMap hardwareMap) {
-        Localizer VisionOdometryLocalizer = new VisionOdometryLocalizer(hardwareMap, localizerConstants);
+    public static Follower createFollower(HardwareMap hardwareMap, Turret turret) {
+        Localizer VisionOdometryLocalizer = new VisionOdometryLocalizer(hardwareMap, localizerConstants, hardwareMap.get(Limelight3A.class, "limelight3A"), turret);
         return new FollowerBuilder(followerConstants, hardwareMap)
                 .pathConstraints(pathConstraints)
                 .mecanumDrivetrain(driveConstants)

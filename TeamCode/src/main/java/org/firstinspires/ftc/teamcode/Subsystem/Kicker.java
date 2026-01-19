@@ -6,9 +6,11 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class Kicker extends SubsystemBase {
     ServoEx kicker;
-    public Kicker(final HardwareMap hwMap, final String name){
+    public Kicker(final HardwareMap hwMap, final String name, Telemetry telemetry){
         kicker = new ServoEx(hwMap, name);
     }
     public void setPosition(double position){

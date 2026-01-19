@@ -1,46 +1,65 @@
 package org.firstinspires.ftc.teamcode.Teleop;
 
-import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
-import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RepeatCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
-import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.button.Button;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
-import org.firstinspires.ftc.teamcode.Commands.Shoot;
-import org.firstinspires.ftc.teamcode.Pedro.Constants;
+import org.firstinspires.ftc.teamcode.Commands.Align;
+import org.firstinspires.ftc.teamcode.Commands.Shoot.RunShooter;
+import org.firstinspires.ftc.teamcode.Commands.Shoot.ShootKicker;
+import org.firstinspires.ftc.teamcode.Subsystem.Intake;
 import org.firstinspires.ftc.teamcode.Subsystem.Kicker;
 import org.firstinspires.ftc.teamcode.Subsystem.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystem.Drive;
+import org.firstinspires.ftc.teamcode.Subsystem.Turret;
 
 @TeleOp
 public class SolversLibTeleOp extends CommandOpMode {
     Command driveCommand;
+    Drive drive;
+    Kicker kicker;
+    Intake intake;
+    Shooter shooter;
+    Command shootSequence = new ShootKicker(kicker, intake);
     @Override
     public void initialize() {
         CommandScheduler.getInstance().enable();
         GamepadEx controller = new GamepadEx(gamepad1);
-        Drive drive = new Drive(hardwareMap, controller);
-        Kicker kicker = new Kicker(hardwareMap, "ballKick");
-        Shooter shooter = new Shooter(hardwareMap, "shooter");
+        Turret turret = new Turret(hardwareMap, "turret");
+        drive = new Drive(hardwareMap, controller, telemetry, turret);
+        kicker = new Kicker(hardwareMap, "ballKick", telemetry);
+        intake = new Intake(hardwareMap, "intake");
+        shooter = new Shooter(hardwareMap, "shooter", telemetry);
+
+        waitForStart();
+        //CommandScheduler.getInstance().schedule(new RunShooter(shooter));
+
+        Button rightBumper = controller.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER);
+        rightBumper.whenPressed(shootSequence, false);
+
+        Button leftBumper = controller.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER);
+        leftBumper.toggleWhenPressed((intake::enable), (intake::disable));
 
         Button a = controller.getGamepadButton(GamepadKeys.Button.A);
-        Command shootSequence = new RepeatCommand(new Shoot(kicker, shooter, drive), 3);
-        a.toggleWhenPressed(shootSequence);
+        a.toggleWhenPressed(new Align(drive, turret));
 
-        driveCommand = new SequentialCommandGroup(new InstantCommand(drive::teleopDrive), new RunCommand(drive::periodic));
+        driveCommand = new RunCommand(drive::periodic);
         CommandScheduler.getInstance().schedule(driveCommand);
     }
     @Override
-    public void runOpMode(){
-        while (opModeIsActive()){
-            CommandScheduler.getInstance().run();
-        }
+    public void run(){
+        super.run();
+        telemetry.addData("shooter speed: ", shooter.shooter.getVelocity());
+        telemetry.addData("shoot command scheduled? ", shootSequence);
+        telemetry.addData("x: ", drive.follower.getPose().getX());
+        telemetry.addData("y: ", drive.follower.getPose().getY());
+        telemetry.addData("heading: ", drive.follower.getPose().getHeading());
+        telemetry.update();
     }
 }

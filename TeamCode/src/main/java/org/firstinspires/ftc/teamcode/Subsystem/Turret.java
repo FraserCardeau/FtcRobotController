@@ -1,24 +1,21 @@
 package org.firstinspires.ftc.teamcode.Subsystem;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Range;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.controller.PIDController;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
+import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
 
 public class Turret extends SubsystemBase {
-    MotorEx turret;
-    PIDController turretPID = new PIDController(0, 0, 0);
+    ServoEx turret;
     public Turret(final HardwareMap hwMap, final String name) {
-        turret = hwMap.get(MotorEx.class, name);
+        turret = new ServoEx(hwMap, name, 0, 2);
     }
     public void setPosition(double position){
-        turretPID.setSetPoint(position);
+        turret.set((position / 180) + 1);
     }
-    public double getCurrentPosition(){ // REMINDER: tune this later
-        return turret.getCurrentPosition();
-    }
-    @Override
-    public void periodic(){
-        turret.set(turretPID.calculate(turret.getCurrentPosition()));
+    public double getCurrentPosition(){
+        return Math.toDegrees((turret.get() - 1) * 180);
     }
 }

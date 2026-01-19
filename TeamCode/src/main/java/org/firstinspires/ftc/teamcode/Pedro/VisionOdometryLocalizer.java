@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.Pedro;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 import com.pedropathing.ftc.localization.constants.PinpointConstants;
 import com.pedropathing.ftc.localization.localizers.PinpointLocalizer;
 import com.pedropathing.ftc.localization.localizers.ThreeWheelLocalizer;
@@ -19,26 +22,25 @@ public class VisionOdometryLocalizer extends PinpointLocalizer {
     private final double M_TO_IN = 39.37007874;
     Pose3D bp;
     Turret turret;
-    public VisionOdometryLocalizer(HardwareMap map, PinpointConstants constants) {
+    Limelight3A limelight;
+    public VisionOdometryLocalizer(HardwareMap map, PinpointConstants constants, Limelight3A limelight, Turret turret) {
         super(map, constants);
+        this.limelight = limelight;
         this.turret = turret;
+        limelight.start();
     }
 
     @Override
     public void update() {
         super.update();
-        /*LLResult result = limelight.getLatestResult();
-        if (result.isValid() && Math.abs(result.getBotpose_MT2().getOrientation().getYaw(AngleUnit.DEGREES) - bp.getOrientation().getYaw(AngleUnit.DEGREES)) < 20) {
+        LLResult result = limelight.getLatestResult();
+        if (result.isValid() && result != null){
             bp = result.getBotpose_MT2();
             double vx = bp.getPosition().x * M_TO_IN;
             double vy = bp.getPosition().y * M_TO_IN;
-            double vYawDeg = bp.getOrientation().getYaw() - turret.getCurrentPosition()
+            double vYawDeg = bp.getOrientation().getYaw() + turret.getCurrentPosition();
             double vHeading = Math.toRadians(vYawDeg);
-            this.setPose(new Pose(vx, vy, normalizeAngle(vHeading)));
-        }*/
-    }
-
-    private double normalizeAngle(double a) {
-        return Math.atan2(Math.sin(a), Math.cos(a));
+            this.setPose(new Pose(vx, vy, Math.atan2(sin(vHeading), cos(vHeading))));
+        }
     }
 }

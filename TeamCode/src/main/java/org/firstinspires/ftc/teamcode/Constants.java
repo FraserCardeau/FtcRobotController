@@ -4,5 +4,5 @@ import com.pedropathing.geometry.Pose;
 
 public final class Constants {
     private Constants() {}
-    public static final Pose target = new Pose(72, 72);
+    public static final Pose target = new Pose(0, 144);
 }

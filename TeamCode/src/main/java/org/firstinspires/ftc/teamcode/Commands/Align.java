@@ -9,16 +9,18 @@ import org.firstinspires.ftc.teamcode.Subsystem.Turret;
 public class Align extends CommandBase {
     Drive drive;
     Turret turret;
-    private double targetAngle;
+    double targetAngle;
     public Align(Drive drive, Turret turret){
         this.drive = drive;
         this.turret = turret;
-        addRequirements(drive, turret);
+        addRequirements(turret);
     }
     @Override
     public void initialize(){
-        targetAngle = Math.atan((drive.getPose().getY() - Constants.target.getY())/(drive.getPose().getX() - Constants.target.getX()));
-        turret.setPosition(targetAngle - drive.getPose().getHeading());
-        drive.holdPoint();
+        targetAngle = Math.toDegrees(Math.atan2((Constants.target.getY() - drive.getPose().getY()), (Constants.target.getX() - drive.getPose().getX())));
+    }
+    @Override
+    public void execute(){
+        turret.setPosition(targetAngle + Math.toDegrees(drive.getPose().getHeading()));
     }
 }
