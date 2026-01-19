@@ -6,11 +6,11 @@ import com.seattlesolvers.solverslib.command.CommandScheduler;
 import org.firstinspires.ftc.teamcode.Subsystem.Drive;
 import org.firstinspires.ftc.teamcode.Subsystem.Turret;
 
-public class DriveCommand extends CommandBase {
+public class TeleOpDriveCommand extends CommandBase {
     Drive drive;
     Turret turret;
     private double targetAngle;
-    public DriveCommand(Drive drive, Turret turret){
+    public TeleOpDriveCommand(Drive drive, Turret turret){
         this.drive = drive;
         this.turret = turret;
         addRequirements(drive);

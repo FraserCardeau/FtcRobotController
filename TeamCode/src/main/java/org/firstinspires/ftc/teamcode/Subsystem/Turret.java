@@ -16,6 +16,6 @@ public class Turret extends SubsystemBase {
         turret.set((position / 180) + 1);
     }
     public double getCurrentPosition(){
-        return Math.toDegrees((turret.get() - 1) * 180);
+        return (turret.get() - 1) * 180;
     }
 }

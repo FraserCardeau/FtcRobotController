@@ -1,14 +1,35 @@
 package org.firstinspires.ftc.teamcode.Auton;
 
+import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
+import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.CommandScheduler;
+import com.seattlesolvers.solverslib.gamepad.GamepadEx;
+
+import org.firstinspires.ftc.teamcode.Subsystem.BreakBeamSensor;
+import org.firstinspires.ftc.teamcode.Subsystem.Drive;
+import org.firstinspires.ftc.teamcode.Subsystem.Intake;
+import org.firstinspires.ftc.teamcode.Subsystem.Kicker;
+import org.firstinspires.ftc.teamcode.Subsystem.Shooter;
+import org.firstinspires.ftc.teamcode.Subsystem.Turret;
 
 public class BlueAuton extends CommandOpMode {
+    Command driveCommand;
+    Turret turret;
+    Drive drive;
+    Kicker kicker;
+    Intake intake;
+    Shooter shooter;
+    BreakBeamSensor breakBeamSensor;
+    Follower follower;
     @Override
     public void initialize() {
-
+        CommandScheduler.getInstance().enable();
+        drive = new Drive(hardwareMap, telemetry, turret);
     }
     @Override
     public void run(){
@@ -53,4 +74,95 @@ public class BlueAuton extends CommandOpMode {
     grabPickup1_lane2, grabPickup2_lane2, grabPickup3_lane2, scorePickup2,
             grabPickup1_lane3, grabPickup2_lane3, grabPickup3_lane3, scorePickup3,
             park;
+    public void buildPaths() {
+
+        // startPose -> scorePose
+        scorePreload = new Path(new BezierLine(startPose, scorePose));
+        scorePreload.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
+
+        // LOCK HEADING ON PICKUPS (pickup heading = 180)
+        double pickupHeading = Math.toRadians(180);
+
+        // lane 1 pickups
+        grabPickup1_lane1 = follower.pathBuilder()
+                .addPath(new BezierLine(scorePose, pickup1Pose_lane1))
+                .setConstantHeadingInterpolation(pickupHeading)
+                .build();
+
+        grabPickup2_lane1 = follower.pathBuilder()
+                .addPath(new BezierLine(pickup1Pose_lane1, pickup2Pose_lane1))
+                .setConstantHeadingInterpolation(pickupHeading)
+                .build();
+
+        grabPickup3_lane1 = follower.pathBuilder()
+                .addPath(new BezierLine(pickup2Pose_lane1, pickup3Pose_lane1))
+                .setConstantHeadingInterpolation(pickupHeading)
+                .build();
+
+        // -------- Gate Open Paths (NOW THEY COMPILE + ACTUALLY RUN) --------
+        // After you reach pickup3 lane1, you’ll go to gateOpenPose1 then gateOpenPose2, then back to scoring.
+        gateOpenPath1 = follower.pathBuilder()
+                .addPath(new BezierLine(pickup3Pose_lane1, gateOpenPose1))
+                .setConstantHeadingInterpolation(pickupHeading)
+                .build();
+
+        gateOpenPath2 = follower.pathBuilder()
+                .addPath(new BezierLine(gateOpenPose1, gateOpenPose2))
+                .setConstantHeadingInterpolation(pickupHeading)
+                .build();
+
+        // score after gate open
+        scorePickup1 = follower.pathBuilder()
+                .addPath(new BezierLine(gateOpenPose2, scorePose1))
+                .setLinearHeadingInterpolation(gateOpenPose2.getHeading(), scorePose1.getHeading())
+                .build();
+        // ------------------------------------------------------------------
+
+        // lane 2 pickups (start from scorePose1)
+        grabPickup1_lane2 = follower.pathBuilder()
+                .addPath(new BezierLine(scorePose1, pickup1Pose_lane2))
+                .setConstantHeadingInterpolation(pickupHeading)
+                .build();
+
+        grabPickup2_lane2 = follower.pathBuilder()
+                .addPath(new BezierLine(pickup1Pose_lane2, pickup2Pose_lane2))
+                .setConstantHeadingInterpolation(pickupHeading)
+                .build();
+
+        grabPickup3_lane2 = follower.pathBuilder()
+                .addPath(new BezierLine(pickup2Pose_lane2, pickup3Pose_lane2))
+                .setConstantHeadingInterpolation(pickupHeading)
+                .build();
+
+        scorePickup2 = follower.pathBuilder()
+                .addPath(new BezierLine(pickup3Pose_lane2, scorePose1))
+                .setLinearHeadingInterpolation(pickup3Pose_lane2.getHeading(), scorePose1.getHeading())
+                .build();
+
+        // lane 3 pickups
+        grabPickup1_lane3 = follower.pathBuilder()
+                .addPath(new BezierLine(scorePose1, pickup1Pose_lane3))
+                .setConstantHeadingInterpolation(pickupHeading)
+                .build();
+
+        grabPickup2_lane3 = follower.pathBuilder()
+                .addPath(new BezierLine(pickup1Pose_lane3, pickup2Pose_lane3))
+                .setConstantHeadingInterpolation(pickupHeading)
+                .build();
+
+        grabPickup3_lane3 = follower.pathBuilder()
+                .addPath(new BezierLine(pickup2Pose_lane3, pickup3Pose_lane3))
+                .setConstantHeadingInterpolation(pickupHeading)
+                .build();
+
+        scorePickup3 = follower.pathBuilder()
+                .addPath(new BezierLine(pickup3Pose_lane3, scorePose2))
+                .setLinearHeadingInterpolation(pickup3Pose_lane3.getHeading(), scorePose2.getHeading())
+                .build();
+
+        park = follower.pathBuilder()
+                .addPath(new BezierLine(scorePose2, Park))
+                .setLinearHeadingInterpolation(scorePose2.getHeading(), Park.getHeading())
+                .build();
+    }
 }

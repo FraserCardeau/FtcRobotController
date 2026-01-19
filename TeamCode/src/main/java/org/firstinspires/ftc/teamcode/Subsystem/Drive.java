@@ -25,6 +25,10 @@ public class Drive extends SubsystemBase {
         follower = Constants.createFollower(hw, turret);
         follower.startTeleopDrive(true);
     }
+    public Drive(HardwareMap hw, Telemetry telemetry, Turret turret){
+        follower = Constants.createFollower(hw, turret);
+        follower.startTeleopDrive(true);
+    }
     public Pose getPose(){
         return follower.getPose();
     }
