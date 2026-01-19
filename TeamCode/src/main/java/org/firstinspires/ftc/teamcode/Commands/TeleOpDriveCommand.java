@@ -22,8 +22,5 @@ public class TeleOpDriveCommand extends CommandBase {
     @Override
     public void execute(){
         drive.periodic();
-        if (CommandScheduler.getInstance().isScheduled(new Align(drive, turret))){
-            turret.setPosition(Math.atan2(144 - drive.getPose().getY(), 144 - drive.getPose().getX()));
-        }
     }
 }
