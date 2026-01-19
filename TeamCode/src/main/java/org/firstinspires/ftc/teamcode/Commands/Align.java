@@ -18,6 +18,7 @@ public class Align extends CommandBase {
     @Override
     public void initialize(){
         targetAngle = Math.toDegrees(Math.atan2((Constants.target.getY() - drive.getPose().getY()), (Constants.target.getX() - drive.getPose().getX())) - drive.getPose().getHeading());
+        targetAngle = ((targetAngle + 180) % 360 + 360) % 360 - 180;
         turret.setPosition(targetAngle);
     }
     /*@Override

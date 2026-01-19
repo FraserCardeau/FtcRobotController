@@ -39,7 +39,7 @@ public class SolversLibTeleOp extends CommandOpMode {
         kicker = new Kicker(hardwareMap, "ballKick", telemetry);
         intake = new Intake(hardwareMap, "intake");
         shooter = new Shooter(hardwareMap, "shooter", telemetry);
-        breakBeamSensor = new BreakBeamSensor(hardwareMap, "breakBeam");
+        breakBeamSensor = new BreakBeamSensor(hardwareMap, "breakbeam");
 
         waitForStart();
         Command runShooter = new RunShooter(shooter);
@@ -47,7 +47,7 @@ public class SolversLibTeleOp extends CommandOpMode {
         b.toggleWhenPressed(runShooter);
 
         Button rightBumper = controller.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER);
-        rightBumper.whenPressed(new RepeatCommand(shootSequence, breakBeamSensor.artifactCount), false);
+        rightBumper.whenPressed(new RepeatCommand(shootSequence, 3), false);
 
         Button leftBumper = controller.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER);
         leftBumper.toggleWhenPressed((intake::enable), (intake::disable));
