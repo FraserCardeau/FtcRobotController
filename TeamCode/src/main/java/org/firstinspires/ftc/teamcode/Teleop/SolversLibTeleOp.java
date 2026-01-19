@@ -29,7 +29,7 @@ public class SolversLibTeleOp extends CommandOpMode {
     Intake intake;
     Shooter shooter;
     BreakBeamSensor breakBeamSensor;
-    Command shootSequence = new ShootKicker(kicker, intake);
+    Command shootSequence;
     @Override
     public void initialize() {
         CommandScheduler.getInstance().enable();
@@ -40,6 +40,7 @@ public class SolversLibTeleOp extends CommandOpMode {
         intake = new Intake(hardwareMap, "intake");
         shooter = new Shooter(hardwareMap, "shooter", telemetry);
         breakBeamSensor = new BreakBeamSensor(hardwareMap, "breakbeam");
+        shootSequence = new ShootKicker(kicker, intake);
 
         waitForStart();
         Command runShooter = new RunShooter(shooter);
