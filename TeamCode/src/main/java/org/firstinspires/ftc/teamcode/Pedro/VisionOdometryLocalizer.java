@@ -27,7 +27,9 @@ public class VisionOdometryLocalizer extends PinpointLocalizer {
         super(map, constants);
         this.limelight = limelight;
         this.turret = turret;
+        limelight.pipelineSwitch(0);
         limelight.start();
+        limelight.setPollRateHz(15);
     }
 
     @Override
@@ -36,9 +38,9 @@ public class VisionOdometryLocalizer extends PinpointLocalizer {
         LLResult result = limelight.getLatestResult();
         if (result.isValid() && result != null){
             bp = result.getBotpose_MT2();
-            double vx = bp.getPosition().x * M_TO_IN;
-            double vy = bp.getPosition().y * M_TO_IN;
-            double vYawDeg = bp.getOrientation().getYaw() + turret.getCurrentPosition();
+            double vx = bp.getPosition().x * M_TO_IN + 72;
+            double vy = bp.getPosition().y * M_TO_IN + 72;
+            double vYawDeg = bp.getOrientation().getYaw();
             double vHeading = Math.toRadians(vYawDeg);
             this.setPose(new Pose(vx, vy, Math.atan2(sin(vHeading), cos(vHeading))));
         }

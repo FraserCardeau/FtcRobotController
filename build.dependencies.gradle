@@ -1,8 +1,9 @@
 repositories {
     mavenCentral()
     google() // Needed for androidx
-    maven {url "https://repo.dairy.foundation/releases"}
-    maven {url = "https://mymaven.bylazar.com/releases"}
+    maven { url "https://mymaven.bylazar.com/releases" }
+    maven { url "https://github.com/LimelightVision/limelightlib-wpijava/releases/download" }
+    maven { url "https://repo.dairy.foundation/releases" }
 }
 
 dependencies {
@@ -23,5 +24,7 @@ dependencies {
     implementation 'com.pedropathing:telemetry:1.0.0'
 
     implementation 'com.bylazar:fullpanels:1.0.6'
+
+    implementation 'net.java.dev.jna:jna:5.14.0'
 }
 

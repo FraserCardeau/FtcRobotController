@@ -4,6 +4,8 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.ftc.localization.constants.PinpointConstants;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.localization.Localizer;
+import com.pedropathing.paths.Path;
+import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
@@ -20,13 +22,16 @@ public class Drive extends SubsystemBase {
     public Follower follower;
     Pose pose;
     Telemetry telemetry;
+    boolean isAuton;
     public Drive(HardwareMap hw, final GamepadEx gamepadEx, Telemetry telemetry, Turret turret){
         this.gamepadEx = gamepadEx;
         follower = Constants.createFollower(hw, turret);
         follower.startTeleopDrive(true);
+        this.isAuton = false;
     }
     public Drive(HardwareMap hw, Telemetry telemetry, Turret turret){
         follower = Constants.createFollower(hw, turret);
+        this.isAuton = true;
     }
     public Pose getPose(){
         return follower.getPose();
@@ -37,9 +42,17 @@ public class Drive extends SubsystemBase {
     public void teleopDrive(){
         follower.startTeleopDrive();
     }
+    public void followPath(Path path){
+        follower.followPath(path);
+    }
+    public void followPath(PathChain path){
+        follower.followPath(path);
+    }
     @Override
     public void periodic(){
-        follower.setTeleOpDrive(gamepadEx.getLeftY(), -gamepadEx.getLeftX(), -gamepadEx.getRightX());
+        if (!isAuton){
+            follower.setTeleOpDrive(gamepadEx.getLeftY(), -gamepadEx.getLeftX(), -gamepadEx.getRightX());
+        }
         pose = follower.getPose();
         follower.update();
     }

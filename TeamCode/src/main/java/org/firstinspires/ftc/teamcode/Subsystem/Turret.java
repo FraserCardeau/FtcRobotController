@@ -8,7 +8,7 @@ import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
 
 public class Turret extends SubsystemBase {
-    ServoEx turret;
+    public ServoEx turret;
     public Turret(final HardwareMap hwMap, final String name) {
         turret = new ServoEx(hwMap, name, 0, 2);
     }

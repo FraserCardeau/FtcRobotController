@@ -66,6 +66,7 @@ public class SolversLibTeleOp extends CommandOpMode {
         telemetry.addData("x: ", drive.follower.getPose().getX());
         telemetry.addData("y: ", drive.follower.getPose().getY());
         telemetry.addData("heading: ", drive.follower.getPose().getHeading());
+        telemetry.addData("turretPos: ", turret.turret.get());
         telemetry.update();
     }
 }
