@@ -4,27 +4,25 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
 import com.pedropathing.ftc.localization.constants.PinpointConstants;
-import com.pedropathing.ftc.localization.localizers.PinpointLocalizer;
-import com.pedropathing.ftc.localization.localizers.ThreeWheelLocalizer;
+import com.pedropathing.localization.Localizer;
+import com.pedropathing.math.Vector;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.pedropathing.ftc.localization.constants.ThreeWheelConstants;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.limelightvision.LLResult;
-import com.seattlesolvers.solverslib.command.SubsystemBase;
-import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.Subsystem.Turret;
 
-public class VisionOdometryLocalizer extends PinpointLocalizer {
+public class VisionOdometryLocalizer implements Localizer {
     private final double M_TO_IN = 39.37007874;
-    Pose3D bp;
+    Pose bp;
+    Pose3D llPose;
     Turret turret;
     Limelight3A limelight;
-    public VisionOdometryLocalizer(HardwareMap map, PinpointConstants constants, Limelight3A limelight, Turret turret) {
-        super(map, constants);
+    double vHeading, vx, vy;
+    public VisionOdometryLocalizer(HardwareMap map, PinpointConstants constants, Limelight3A limelight) {
         this.limelight = limelight;
         this.turret = turret;
         limelight.pipelineSwitch(0);
@@ -33,16 +31,77 @@ public class VisionOdometryLocalizer extends PinpointLocalizer {
     }
 
     @Override
+    public Pose getPose() {
+        return bp;
+    }
+
+    @Override
+    public Pose getVelocity() {
+        return null;
+    }
+
+    @Override
+    public Vector getVelocityVector() {
+        return null;
+    }
+
+    @Override
+    public void setStartPose(Pose setStart) {
+
+    }
+
+    @Override
+    public void setPose(Pose setPose) {
+        bp = setPose.getPose();
+    }
+
+    @Override
     public void update() {
-        super.update();
         LLResult result = limelight.getLatestResult();
         if (result.isValid() && result != null){
-            bp = result.getBotpose_MT2();
-            double vx = bp.getPosition().x * M_TO_IN + 72;
-            double vy = bp.getPosition().y * M_TO_IN + 72;
-            double vYawDeg = bp.getOrientation().getYaw();
-            double vHeading = Math.toRadians(vYawDeg);
-            this.setPose(new Pose(vx, vy, Math.atan2(sin(vHeading), cos(vHeading))));
+            llPose = result.getBotpose_MT2();
+            vx = llPose.getPosition().x * M_TO_IN + 72;
+            vy = llPose.getPosition().y * M_TO_IN + 72;
+            vHeading = (Math.PI / 2) - llPose.getOrientation().getYaw(AngleUnit.RADIANS);
+            vHeading = Math.atan2(Math.sin(vHeading), Math.cos(vHeading));
+            this.setPose(new Pose(vx, vy, vHeading));
         }
+    }
+
+    @Override
+    public double getTotalHeading() {
+        return 0;
+    }
+
+    @Override
+    public double getForwardMultiplier() {
+        return 0;
+    }
+
+    @Override
+    public double getLateralMultiplier() {
+        return 0;
+    }
+
+    @Override
+    public double getTurningMultiplier() {
+        return 0;
+    }
+    @Override
+    public void resetIMU() throws InterruptedException {
+
+    }
+    @Override
+    public double getIMUHeading() {
+        return 0;
+    }
+
+    @Override
+    public boolean isNAN() {
+        return false;
+    }
+    @Override
+    public void setHeading(double heading){
+        limelight.updateRobotOrientation(((Math.toDegrees(heading) + 180) % 360 + 360) % 360 - 180);
     }
 }

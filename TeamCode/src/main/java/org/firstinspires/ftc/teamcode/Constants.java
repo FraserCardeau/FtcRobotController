@@ -8,14 +8,14 @@ import com.pedropathing.paths.PathChain;
 
 public final class Constants {
     private Constants() {}
-    public static final Pose target = new Pose(0, 144);
+    public static final Pose blueTarget = new Pose(0, 144);
+    public static final Pose redTarget = new Pose(144, 144);
     public static boolean isBlueAlliance = true;
     public static PathChain Path1, Path2, Path3, Path4, Path5, Path6, Path7, Path8, Path9, Path10;
     public static void Paths(Follower follower) {
         Path1 = follower.pathBuilder().addPath(
                         new BezierLine(
                                 new Pose(23.000, 126.000),
-
                                 new Pose(45.000, 107.000)
                         )
                 ).setLinearHeadingInterpolation(Math.toRadians(55), Math.toRadians(150))

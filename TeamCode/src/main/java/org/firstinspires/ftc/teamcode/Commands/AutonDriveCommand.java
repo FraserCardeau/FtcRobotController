@@ -12,12 +12,12 @@ public class AutonDriveCommand extends CommandBase {
     Drive drive;
     public AutonDriveCommand(Drive drive, Path path){
         this.drive = drive;
-        drive.follower.followPath(path);
+        drive.followPath(path);
         addRequirements(drive);
     }
     public AutonDriveCommand(Drive drive, PathChain path){
         this.drive = drive;
-        drive.follower.followPath(path);
+        drive.followPath(path);
         addRequirements(drive);
     }
     @Override
@@ -26,6 +26,6 @@ public class AutonDriveCommand extends CommandBase {
     }
     @Override
     public boolean isFinished(){
-        return !drive.follower.isBusy();
+        return !drive.follower.atParametricEnd();
     }
 }

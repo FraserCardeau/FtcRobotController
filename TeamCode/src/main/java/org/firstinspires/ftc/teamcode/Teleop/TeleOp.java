@@ -1,14 +1,22 @@
 package org.firstinspires.ftc.teamcode.Teleop;
 
+import static org.firstinspires.ftc.teamcode.Constants.blueTarget;
+
+import static java.lang.Math.atan2;
+
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.CommandScheduler;
+import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.command.LambdaCommand;
 import com.seattlesolvers.solverslib.command.RepeatCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
+import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.button.Button;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.teamcode.Commands.Align;
+import org.firstinspires.ftc.teamcode.Commands.Recalibrate;
 import org.firstinspires.ftc.teamcode.Commands.Shoot.RunShooter;
 import org.firstinspires.ftc.teamcode.Commands.Shoot.ShootKicker;
 import org.firstinspires.ftc.teamcode.Subsystem.BreakBeamSensor;
@@ -46,13 +54,22 @@ public class TeleOp extends CommandOpMode {
         b.toggleWhenPressed(runShooter);
 
         Button rightBumper = controller.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER);
-        rightBumper.whenPressed(new RepeatCommand(shootSequence, 3), false);
+
+        rightBumper.whenPressed(new InstantCommand(() -> {
+            kicker.setPosition(0.22);
+        }));
+        rightBumper.whenReleased(new InstantCommand(() -> {
+            kicker.setPosition(0.5);
+        }));
 
         Button leftBumper = controller.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER);
         leftBumper.toggleWhenPressed((intake::enable), (intake::disable));
 
         Button a = controller.getGamepadButton(GamepadKeys.Button.A);
         a.toggleWhenPressed(new Align(drive, turret));
+
+        Button y = controller.getGamepadButton(GamepadKeys.Button.Y);
+        y.whenPressed(new Recalibrate(drive, hardwareMap));
 
         driveCommand = new RunCommand(drive::periodic);
         CommandScheduler.getInstance().schedule(driveCommand);
@@ -65,6 +82,10 @@ public class TeleOp extends CommandOpMode {
         telemetry.addData("y: ", drive.follower.getPose().getY());
         telemetry.addData("heading: ", drive.follower.getPose().getHeading());
         telemetry.addData("turretPos: ", turret.turret.get());
+
+        telemetry.addData("xRel: ", blueTarget.getX() - drive.follower.getPose().getX());
+        telemetry.addData("yRel: ", blueTarget.getY() - drive.follower.getPose().getY());
+        telemetry.addData("atan2: ", (atan2(blueTarget.getY() - drive.getPose().getY(), blueTarget.getX() - drive.getPose().getX())) - drive.getPose().getHeading());
         telemetry.update();
     }
 }

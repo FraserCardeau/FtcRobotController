@@ -13,8 +13,8 @@ public class ShootKicker extends CommandBase {
     Kicker kicker;
     Shooter shooter;
     Intake intake;
-    double downPos = 0.5, shootPos = 0.24;
-    Timing.Timer downTimer = new Timing.Timer(300, TimeUnit.MILLISECONDS), shootTimer = new Timing.Timer(200, TimeUnit.MILLISECONDS);
+    double downPos = 0.5, shootPos = 0.22;
+    Timing.Timer downTimer = new Timing.Timer(500, TimeUnit.MILLISECONDS), shootTimer = new Timing.Timer(1000, TimeUnit.MILLISECONDS);
     public ShootKicker(Kicker kicker, Intake intake){
         this.kicker = kicker;
         this.intake = intake;

@@ -1,2 +1,13 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        maven { url = uri("https://repo.dairy.foundation/releases/") }
+    }
+}
+
 include ':FtcRobotController'
 include ':TeamCode'
+include ':SolversLibCore'
+project(':SolversLibCore').projectDir = file('SolversLib/core')

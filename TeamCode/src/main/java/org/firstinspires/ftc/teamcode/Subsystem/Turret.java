@@ -13,7 +13,7 @@ public class Turret extends SubsystemBase {
         turret = new ServoEx(hwMap, name, 0, 2);
     }
     public void setPosition(double position){
-        turret.set((position / 180) + 1);
+        turret.set(((position / 180) + 1) * ((360 * 0.869) / 360));
     }
     public double getCurrentPosition(){
         return (turret.get() - 1) * 180;

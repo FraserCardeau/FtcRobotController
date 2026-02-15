@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Auton;
 import static org.firstinspires.ftc.teamcode.Constants.*;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
@@ -36,6 +37,10 @@ public class FrontAuton extends CommandOpMode {
     Shooter shooter;
     BreakBeamSensor breakBeamSensor;
     Follower follower;
+
+    private Command shootSequence(Kicker kicker, Intake intake){
+        return new RepeatCommand(new ShootKicker(kicker, intake), 3);
+    }
     @Override
     public void initialize() {
         CommandScheduler.getInstance().enable();
@@ -47,10 +52,11 @@ public class FrontAuton extends CommandOpMode {
         shooter = new Shooter(hardwareMap, "shooter", telemetry);
         breakBeamSensor = new BreakBeamSensor(hardwareMap, "breakbeam");
         Constants.Paths(drive.follower);
-        Command shootSequence = new RepeatCommand(new ShootKicker(kicker, intake), 3);
+        drive.follower.setStartingPose(new Pose(23.000, 126.000, Math.toRadians(50)));
 
         waitForStart();
-        CommandScheduler.getInstance().schedule(new RunShooter(shooter));
+        //CommandScheduler.getInstance().schedule(new RunShooter(shooter));
+        CommandScheduler.getInstance().schedule(new RepeatCommand(new InstantCommand(() -> drive.periodic())));
 
         CommandScheduler.getInstance().schedule(
                 new SequentialCommandGroup(
@@ -58,7 +64,7 @@ public class FrontAuton extends CommandOpMode {
                         new ParallelRaceGroup(
                                 new SequentialCommandGroup(
                                         new AutonDriveCommand(drive, Path1),
-                                        shootSequence
+                                        shootSequence(kicker, intake)
                                 ),
                                 new Align(drive, turret)
                         ),
@@ -67,7 +73,7 @@ public class FrontAuton extends CommandOpMode {
                         new ParallelRaceGroup(
                                 new SequentialCommandGroup(
                                         new AutonDriveCommand(drive, Path2),
-                                        shootSequence
+                                        shootSequence(kicker, intake)
                                 ),
                                 new SequentialCommandGroup(
                                         new WaitCommand(500),
@@ -81,7 +87,7 @@ public class FrontAuton extends CommandOpMode {
                         new ParallelRaceGroup(
                                 new SequentialCommandGroup(
                                         new AutonDriveCommand(drive, Path3),
-                                        shootSequence
+                                        shootSequence(kicker, intake)
                                 ),
                                 new SequentialCommandGroup(
                                         new WaitCommand(600),
@@ -106,7 +112,7 @@ public class FrontAuton extends CommandOpMode {
                         new ParallelRaceGroup(
                                 new SequentialCommandGroup(
                                         new AutonDriveCommand(drive, Path6),
-                                        shootSequence
+                                        shootSequence(kicker, intake)
                                 ),
                                 new Align(drive, turret)
                         ),
@@ -123,7 +129,7 @@ public class FrontAuton extends CommandOpMode {
                         new ParallelRaceGroup(
                                 new SequentialCommandGroup(
                                         new AutonDriveCommand(drive, Path8),
-                                        shootSequence
+                                        shootSequence(kicker, intake)
                                 ),
                                 new Align(drive, turret)
                         ),
@@ -131,7 +137,7 @@ public class FrontAuton extends CommandOpMode {
                         new ParallelRaceGroup(
                                 new SequentialCommandGroup(
                                         new AutonDriveCommand(drive, Path9),
-                                        shootSequence
+                                        shootSequence(kicker, intake)
                                 ),
                                 new SequentialCommandGroup(
                                         new WaitCommand(1200),
@@ -146,8 +152,15 @@ public class FrontAuton extends CommandOpMode {
                 )
         );
     }
+
     @Override
     public void run(){
         super.run();
+        telemetry.addData("shooter speed: ", shooter.shooter.getVelocity());
+        telemetry.addData("x: ", drive.follower.getPose().getX());
+        telemetry.addData("y: ", drive.follower.getPose().getY());
+        telemetry.addData("heading: ", drive.follower.getPose().getHeading());
+        telemetry.addData("turretPos: ", turret.turret.get());
+        telemetry.update();
     }
 }
