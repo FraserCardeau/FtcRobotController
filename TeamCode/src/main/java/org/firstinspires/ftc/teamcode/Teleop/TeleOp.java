@@ -25,6 +25,7 @@ import org.firstinspires.ftc.teamcode.Subsystem.Kicker;
 import org.firstinspires.ftc.teamcode.Subsystem.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystem.Drive;
 import org.firstinspires.ftc.teamcode.Subsystem.Turret;
+import org.firstinspires.ftc.teamcode.Util.AllianceConfig;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
 public class TeleOp extends CommandOpMode {
@@ -66,7 +67,7 @@ public class TeleOp extends CommandOpMode {
         leftBumper.toggleWhenPressed((intake::enable), (intake::disable));
 
         Button a = controller.getGamepadButton(GamepadKeys.Button.A);
-        a.toggleWhenPressed(new Align(drive, turret));
+        a.toggleWhenPressed(new Align(AllianceConfig.getAlliance(hardwareMap.appContext), drive, turret));
 
         Button y = controller.getGamepadButton(GamepadKeys.Button.Y);
         y.whenPressed(new Recalibrate(drive, hardwareMap));

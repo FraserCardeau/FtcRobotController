@@ -26,6 +26,7 @@ import org.firstinspires.ftc.teamcode.Subsystem.Intake;
 import org.firstinspires.ftc.teamcode.Subsystem.Kicker;
 import org.firstinspires.ftc.teamcode.Subsystem.Shooter;
 import org.firstinspires.ftc.teamcode.Subsystem.Turret;
+import org.firstinspires.ftc.teamcode.Util.AllianceConfig;
 
 @Autonomous
 public class FrontAuton extends CommandOpMode {
@@ -66,7 +67,7 @@ public class FrontAuton extends CommandOpMode {
                                         new AutonDriveCommand(drive, Path1),
                                         shootSequence(kicker, intake)
                                 ),
-                                new Align(drive, turret)
+                                new Align(AllianceConfig.getAlliance(hardwareMap.appContext), drive, turret)
                         ),
 
                         // Drive, intake on, intake off, align, shoot
@@ -80,7 +81,7 @@ public class FrontAuton extends CommandOpMode {
                                         new InstantCommand(() -> intake.enable()),
                                         new WaitCommand(600),
                                         new InstantCommand(() -> intake.disable()),
-                                        new Align(drive, turret)
+                                        new Align(AllianceConfig.getAlliance(hardwareMap.appContext), drive, turret)
                                 )
                         ),
 
@@ -94,7 +95,7 @@ public class FrontAuton extends CommandOpMode {
                                         new InstantCommand(() -> intake.enable()),
                                         new WaitCommand(1000),
                                         new InstantCommand(() -> intake.disable()),
-                                        new Align(drive, turret)
+                                        new Align(AllianceConfig.getAlliance(hardwareMap.appContext), drive, turret)
                                 )
                         ),
 
@@ -114,7 +115,7 @@ public class FrontAuton extends CommandOpMode {
                                         new AutonDriveCommand(drive, Path6),
                                         shootSequence(kicker, intake)
                                 ),
-                                new Align(drive, turret)
+                                new Align(AllianceConfig.getAlliance(hardwareMap.appContext), drive, turret)
                         ),
 
                         new ParallelCommandGroup(
@@ -131,7 +132,7 @@ public class FrontAuton extends CommandOpMode {
                                         new AutonDriveCommand(drive, Path8),
                                         shootSequence(kicker, intake)
                                 ),
-                                new Align(drive, turret)
+                                new Align(AllianceConfig.getAlliance(hardwareMap.appContext), drive, turret)
                         ),
 
                         new ParallelRaceGroup(
@@ -144,7 +145,7 @@ public class FrontAuton extends CommandOpMode {
                                         new InstantCommand(() -> intake.enable()),
                                         new WaitCommand(2000),
                                         new InstantCommand(() -> intake.disable()),
-                                        new Align(drive, turret)
+                                        new Align(AllianceConfig.getAlliance(hardwareMap.appContext), drive, turret)
                                 )
                         ),
 

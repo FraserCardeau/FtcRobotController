@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.Util.MatrixUtilEx;
 import com.pedropathing.math.Vector;
 
 import java.util.NavigableMap;
+import java.util.Objects;
 import java.util.TreeMap;
 
 public class FusionLocalizer implements Localizer {
@@ -27,11 +28,11 @@ public class FusionLocalizer implements Localizer {
     private final NavigableMap<Long, Pose> twistHistory = new TreeMap<>();
     private final NavigableMap<Long, Matrix> covarianceHistory = new TreeMap<>();
     private final int bufferSize;
-    Localizer vision;
+    VisionOdometryLocalizer vision;
 
     public FusionLocalizer(
             Localizer deadReckoning,
-            Localizer vision,
+            VisionOdometryLocalizer vision,
             double[] P,
             double[] processVariance,
             double[] measurementVariance,
@@ -58,7 +59,7 @@ public class FusionLocalizer implements Localizer {
         double dt = lastUpdateTime < 0 ? 0 : (now - lastUpdateTime) / 1e9;
         lastUpdateTime = now;
         if (vision.getPose() != null){
-            addMeasurement(vision.getPose(), now);
+            addMeasurement(vision.getPose(), (long)(vision.limelight.getLatestResult().getTimestamp() * 1_000_000.0));
         }
 
         //Updates twist, note that the dead reckoning localizer returns world-frame twist
@@ -113,7 +114,7 @@ public class FusionLocalizer implements Localizer {
      * @param timestamp the timestamp of the measurement
      */
     public void addMeasurement(Pose measuredPose, long timestamp) {
-        if (!poseHistory.containsKey(timestamp)) return;
+        if (poseHistory.isEmpty() || timestamp < poseHistory.firstKey() || timestamp > poseHistory.lastKey()) return;
 
         Pose pastPose = interpolate(timestamp, poseHistory);
         if (pastPose == null)
@@ -139,7 +140,7 @@ public class FusionLocalizer implements Localizer {
         );
 
         // Covariance at measurement time
-        Matrix Pm = covarianceHistory.floorEntry(timestamp).getValue();
+        Matrix Pm = Objects.requireNonNull(covarianceHistory.floorEntry(timestamp)).getValue();
 
         // Innovation covariance S = P + R
         Matrix S = Pm.plus(R);
